@@ -7,20 +7,19 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 	<title>Potree Viewer</title>
 
-	<link rel="stylesheet" type="text/css" href="../libs/potree/potree.css">
+	<link rel="stylesheet" type="text/css" href="../build/potree/potree.css">
 	<link rel="stylesheet" type="text/css" href="../libs/jquery-ui/jquery-ui.min.css">
-	<link rel="stylesheet" type="text/css" href="../libs/perfect-scrollbar/css/perfect-scrollbar.css">
 	<link rel="stylesheet" type="text/css" href="../libs/openlayers3/ol.css">
 	<link rel="stylesheet" type="text/css" href="../libs/spectrum/spectrum.css">
 	<link rel="stylesheet" type="text/css" href="../libs/jstree/themes/mixed/style.css">
 </head>
 
 <body>
-	<!-- <script src="../libs/jquery/jquery-3.1.1.min.js"></script>
+	<script src="../libs/jquery/jquery-3.1.1.min.js"></script>
 	<script src="../libs/spectrum/spectrum.js"></script>
-	<script src="../libs/perfect-scrollbar/js/perfect-scrollbar.jquery.js"></script>
 	<script src="../libs/jquery-ui/jquery-ui.min.js"></script>
 	<script src="../libs/three.js/build/three.min.js"></script>
+	<script src="../libs/three.js/extra/lines.js"></script>
 	<script src="../libs/other/BinaryHeap.js"></script>
 	<script src="../libs/tween/tween.min.js"></script>
 	<script src="../libs/d3/d3.js"></script>
@@ -28,75 +27,265 @@
 	<script src="../libs/openlayers3/ol.js"></script>
 	<script src="../libs/i18next/i18next.js"></script>
 	<script src="../libs/jstree/jstree.js"></script>
-	<script src="../libs/potree/potree.js"></script>
-	<script src="../libs/plasio/js/laslaz.js"></script>
+  <script src="../libs/three.js-master/examples/js/shaders/OceanShaders.js"></script>
+  <script src="../libs/three.js-master/examples/js/shaders/OceanShaders.js"></script>
+	<script src="../libs/three.js-master/examples/js/controls/OrbitControls.js"></script>
+	<script src="../libs/three.js-master/examples/js/objects/Water.js"></script>
+
+
+	<script src="../libs/three.js-master/examples/js/libs/stats.min.js"></script>
+	<script src="../libs/three.js-master/examples/js/libs/dat.gui.min.js"></script>
+
 	<script src="../build/potree/potree.js"></script>
- -->
- <script src="../libs/jquery/jquery-3.1.1.min.js"></script>
- <script src="../libs/spectrum/spectrum.js"></script>
- <script src="../libs/jquery-ui/jquery-ui.min.js"></script>
- <script src="../libs/three.js/build/three.min.js"></script>
- <script src="../libs/three.js/extra/lines.js"></script>
- <script src="../libs/other/BinaryHeap.js"></script>
- <script src="../libs/tween/tween.min.js"></script>
- <script src="../libs/d3/d3.js"></script>
- <script src="../libs/proj4/proj4.js"></script>
- <script src="../libs/openlayers3/ol.js"></script>
- <script src="../libs/i18next/i18next.js"></script>
- <script src="../libs/jstree/jstree.js"></script>
- <script src="../libs/three.js-master/examples/js/shaders/OceanShaders.js"></script>
- <script src="../libs/three.js-master/examples/js/shaders/OceanShaders.js"></script>
- <script src="../libs/three.js-master/examples/js/controls/OrbitControls.js"></script>
- <script src="../libs/three.js-master/examples/js/objects/Water.js"></script>
+	<script src="../libs/plasio/js/laslaz.js"></script>
 
-
- <script src="../libs/three.js-master/examples/js/libs/stats.min.js"></script>
- <script src="../libs/three.js-master/examples/js/libs/dat.gui.min.js"></script>
-
- <script src="../build/potree/potree.js"></script>
- <script src="../libs/plasio/js/laslaz.js"></script>
 	<!-- INCLUDE ADDITIONAL DEPENDENCIES HERE -->
-
+	<!-- INCLUDE SETTINGS HERE -->
 
 	<div class="potree_container" style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px; ">
-		<div id="potree_render_area"></div>
+		<div id="potree_render_area" style="background-image: url('../build/potree/resources/images/background.jpg');"></div>
 		<div id="potree_sidebar_container"> </div>
 	</div>
 
 	<script>
 
+		//sam's code
+
+		// var container, stats;
+		// var camera, scene, renderer, light;
+		// var controls, water, sphere, cubeMap;
+    //
+		// var parameters = {
+		// 	oceanSide: 2000,
+		// 	size: 1.0,
+		// 	distortionScale: 3.7,
+		// 	alpha: 1.0
+		// };
+    //
+		// var waterNormals;
+    //
+    //
+    //
+		// // function setWater() {
+    // //
+		// // 	water = new THREE.Water(
+		// // 		parameters.oceanSide * 5,
+		// // 		parameters.oceanSide * 5,
+		// // 		{
+		// // 			textureWidth: 512,
+		// // 			textureHeight: 512,
+		// // 			waterNormals: new THREE.TextureLoader().load( 'textures/waternormals.jpg', function ( texture ) {
+		// // 				texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+		// // 			}),
+		// // 			alpha: 	parameters.alpha,
+		// // 			sunDirection: light.position.clone().normalize(),
+		// // 			sunColor: 0xffffff,
+		// // 			waterColor: 0x001e0f,
+		// // 			distortionScale: parameters.distortionScale,
+		// // 			fog: scene.fog != undefined
+		// // 		}
+		// // 	);
+    // //
+		// // 	water.rotation.x = - Math.PI / 2;
+		// // 	water.receiveShadow = true;
+    // //
+		// // 	scene.add( water );
+    // //
+		// // }
+    // //
+		// // function setSkybox() {
+    // //
+		// // 	cubeMap = new THREE.CubeTexture( [] );
+		// // 	cubeMap.format = THREE.RGBFormat;
+    // //
+		// // 	var loader = new THREE.ImageLoader();
+		// // 	loader.load( 'textures/skyboxsun25degtest.png', function ( image ) {
+    // //
+		// // 		var getSide = function ( x, y ) {
+    // //
+		// // 			var size = 1024;
+    // //
+		// // 			var canvas = document.createElement( 'canvas' );
+		// // 			canvas.width = size;
+		// // 			canvas.height = size;
+    // //
+		// // 			var context = canvas.getContext( '2d' );
+		// // 			context.drawImage( image, - x * size, - y * size );
+    // //
+		// // 			return canvas;
+    // //
+		// // 		};
+    // //
+		// // 		cubeMap.images[ 0 ] = getSide( 2, 1 ); // px
+		// // 		cubeMap.images[ 1 ] = getSide( 0, 1 ); // nx
+		// // 		cubeMap.images[ 2 ] = getSide( 1, 0 ); // py
+		// // 		cubeMap.images[ 3 ] = getSide( 1, 2 ); // ny
+		// // 		cubeMap.images[ 4 ] = getSide( 1, 1 ); // pz
+		// // 		cubeMap.images[ 5 ] = getSide( 3, 1 ); // nz
+		// // 		cubeMap.needsUpdate = true;
+    // //
+		// // 	} );
+    // //
+		// // 	var cubeShader = THREE.ShaderLib[ 'cube' ];
+		// // 	cubeShader.uniforms[ 'tCube' ].value = cubeMap;
+    // //
+		// // 	var skyBoxMaterial = new THREE.ShaderMaterial( {
+		// // 		fragmentShader: cubeShader.fragmentShader,
+		// // 		vertexShader: cubeShader.vertexShader,
+		// // 		uniforms: cubeShader.uniforms,
+		// // 		side: THREE.BackSide
+		// // 	} );
+    // //
+		// // 	var skyBox = new THREE.Mesh(
+		// // 		new THREE.BoxGeometry( parameters.oceanSide * 5 + 100, parameters.oceanSide * 5 + 100, parameters.oceanSide * 5 + 100 ),
+		// // 		skyBoxMaterial
+		// // 	);
+    // //
+		// // 	scene.add( skyBox );
+    // //
+		// // }
+    // //
+		// // function setLighting() {
+    // //
+		// // 	renderer.shadowMap.enabled = true;
+    // //
+		// // 	light = new THREE.DirectionalLight( 0xffffbb, 1 );
+		// // 	light.position.set( - 30, 30, - 30 );
+		// // 	light.castShadow = true;
+		// // 	light.shadow.camera.top = 45;
+		// // 	light.shadow.camera.right = 40;
+		// // 	light.shadow.camera.left = light.shadow.camera.bottom = -40;
+		// // 	light.shadow.camera.near = 1;
+		// // 	light.shadow.camera.far = 200;
+    // //
+		// // 	scene.add( light, new THREE.AmbientLight( 0x888888 ) );
+    // //
+		// // }
+    // //
+		// // function onWindowResize() {
+    // //
+		// // 	camera.aspect = window.innerWidth / window.innerHeight;
+		// // 	camera.updateProjectionMatrix();
+    // //
+		// // 	renderer.setSize( window.innerWidth, window.innerHeight );
+    // //
+		// // }
+    //
+    //
+    //
+    //
+		// 			scene = new THREE.Scene();
+		// 			scene.fog = new THREE.FogExp2( 0xaabbbb, 0.001 );
+    //
+		// 			//
+    //
+		// 			camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 1, 20000 );
+		// 			camera.position.set( 30, 30, 100 );
+    //
+		// 			//
+    //
+		// 			controls = new THREE.OrbitControls( camera, renderer.domElement );
+		// 			controls.maxPolarAngle = Math.PI * 0.495;
+		// 			controls.target.set( 0, 10, 0 );
+		// 			controls.enablePan = false;
+		// 			controls.minDistance = 40.0;
+		// 			controls.maxDistance = 200.0;
+		// 			camera.lookAt( controls.target );
+    //
+		// 			setLighting();
+    //
+		// 			//
+    //
+		// 			setWater();
+    //
+		// 			//
+    //
+		// 			setSkybox();
+    //
+		// 			//
+    //
+		// 			var geometry = new THREE.IcosahedronGeometry( 20, 2 );
+    //
+		// 			for ( var i = 0, j = geometry.faces.length; i < j; i ++ ) {
+    //
+		// 				geometry.faces[ i ].color.setHex( Math.random() * 0xffffff );
+    //
+		// 			}
+    //
+		// 			var material = new THREE.MeshPhongMaterial( {
+		// 				vertexColors: THREE.FaceColors,
+		// 				shininess: 10,
+		// 				envMap: cubeMap,
+		// 				side: THREE.DoubleSide
+		// 			} );
+    //
+		// 			sphere = new THREE.Mesh( geometry, material );
+		// 			sphere.castShadow = true;
+		// 			scene.add( sphere );
+
+		//
+
 		window.viewer = new Potree.Viewer(document.getElementById("potree_render_area"));
-		// document.title = "";
-		// viewer.setEDLEnabled(false);
-		// viewer.setBackground("gradient"); // ["skybox", "gradient", "black", "white"];
-		// viewer.setDescription(``);
+
 		viewer.setEDLEnabled(true);
 		viewer.setFOV(60);
 		viewer.setPointBudget(1*1000*1000);
-		document.title = "";
-		viewer.setEDLEnabled(false);
-		viewer.setBackground("gradient"); // ["skybox", "gradient", "black", "white"];
-		viewer.setDescription(``);
+		viewer.setMinNodeSize(0);
 		viewer.loadSettingsFromURL();
+
+		viewer.setDescription("");
 
 		viewer.loadGUI(() => {
 			viewer.setLanguage('en');
 			$("#menu_appearance").next().show();
-			$("#menu_tools").next().show();
-			$("#menu_scene").next().show();
 			viewer.toggleSidebar();
 		});
 
+		let sphere = new THREE.Mesh(
+			new THREE.PlaneGeometry(32, 32),
+			new THREE.MeshNormalMaterial()
+		);
+
+	  sphere.geometry.translate(0.,0.,2.);
+		viewer.scene.scene.add(sphere);
+
+		// Sigeom
+		let gradientNames = Object.keys(Potree.Gradients);
+		let radius = 520;
+		for(let i = 0; i < 1; i++){
+			let gradientName = gradientNames[i];
+			let gradient = Potree.Gradients[gradientName];
+
+			let u = 2 * Math.PI * i / gradientNames.length;
+
+			let x = 0; //Math.cos(u) * radius + 2.5;
+			let y = 400 * u - 900; //Math.sin(u) * radius + 0.8;
 		Potree.loadPointCloud("../pointclouds/atlas/cloud.js", "atlas", e => {
 			let pointcloud = e.pointcloud;
-			let material = pointcloud.material;
+			let material = e.pointcloud.material;
+			material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
+			material.activeAttributeName = "elevation";
+			material.gradient = gradient;
 			viewer.scene.addPointCloud(pointcloud);
 			// material.pointColorType = Potree.PointColorType.RGB; // any Potree.PointColorType.XXXX
 			material.size = 1;
 			material.pointSizeType = Potree.PointSizeType.ADAPTIVE;
-			material.shape = Potree.PointShape.SQUARE;
+			// material.shape = Potree.PointShape.SQUARE;
 			viewer.fitToScreen();
+			viewer.scene.view.position.set(-31.007, 18.245, 20.695);
+			viewer.scene.view.lookAt(-5.288, 2.126, 6.048);
 		});
+}
+
+		function pause(){
+			animation.pause();
+			//light.disableShadowUpdates = true;
+		}
+
+		function resume(){
+			animation.resume();
+			//light.disableShadowUpdates = false;
+		}
 
 	</script>
 
